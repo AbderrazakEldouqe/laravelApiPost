@@ -23,6 +23,7 @@ class ApiAuthController extends Controller
     public function login(Request $request)
     {
         $input = $request->only('email', 'password');
+
         $token = null;
 
         if (!$token = JWTAuth::attempt($input)) {
@@ -31,10 +32,11 @@ class ApiAuthController extends Controller
                 'message' => 'Invalid Email or Password',
             ], 401);
         }
-
+        $userlogin=User::where('email','=',$input['email'])->first();
         return response()->json([
             'success' => true,
             'token' => $token,
+            'id'=>$userlogin->user_id
         ]);
     }
 
@@ -77,13 +79,13 @@ class ApiAuthController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
 
-        if ($this->loginAfterSignUp) {
+       /* if ($this->loginAfterSignUp) {
             return $this->login($request);
-        }
+        }*/
 
         return response()->json([
             'success'   =>  true,
-            'data'      =>  $user
+            'user'      =>  $user
         ], 200);
     }
 }

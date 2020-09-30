@@ -32,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'id'
     ];
 
     /**
@@ -60,7 +61,9 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return ['id'=>$this->user_id,
+            'name'=>$this->name
+        ];
     }
 
     public function posts(){
